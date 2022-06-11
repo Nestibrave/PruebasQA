@@ -26,7 +26,7 @@ func test_formatear_numero_menor_a_10_devuelve_el_mismo_numero_como_string_compl
 	
 func test_formatear_numero_mayor_a_99_devuelve_el_mismo_numero_como_string():
 	var valor_formateado = Utils.formatear_timer(100)
-	assert_true(valor_formateado == "100")
+	assert_true(valor_formateado == "00")
 	pass
 	
 	
@@ -45,6 +45,3 @@ func test_validar_atributo_fuerza_menor_a_NArma_no_es_valido():
 	var fuerza_menor_a_NArma = Utils.validar_atributo(10, 6)
 	assert_true(fuerza_menor_a_NArma == false)
 	pass
-	
-	
-	
