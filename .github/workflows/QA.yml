@@ -3,16 +3,31 @@ on: [push]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:3.3.4
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: Discord notification
+      - name: Godot_Unit_Tests
+        id: Godot_Unit_Tests
+        run: |
+          godot -d -s --path $PWD addons/gut/gut_cmdln.gd
+      - name: Discord notification For Failure
+        if: steps.Godot_Unit_Tests.outcome == 'failure'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_TEST_GENERAL_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
           args: |
-            'Hola bot'
+            'Status: Test fallaron'
+      - name: Discord notification For Success
+        if: steps.Godot_Unit_Tests.outcome == 'success'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_TEST_GENERAL_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: |
+            'Status: Test Pasaron correctamente'
